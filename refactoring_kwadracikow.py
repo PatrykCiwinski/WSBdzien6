@@ -1,4 +1,4 @@
-# rysowanie lini od myszki
+# rysowanie lini od myszki do środka każdego obiektu
 import random
 import pygame
 pygame.init()
@@ -18,16 +18,17 @@ class FizykaOdbijajacegoSieObiektu:
         if self._czy_ustawiac_wymiary:
             self.szerokosc = 50
             self.wysokosc = 50
-
-    @property
-    def srodek_0biektu_x(self):
-        return self.szerokosc/2 +self.x
-    @property
-    def srodek_0biektu_y(self):
-        return self.wysokosc/2 +self.y
     @property
     def _czy_ustawiac_wymiary(self):
         return True
+    @property
+    def srodek_obiektu_x(self):
+        return self.x + self.szerokosc / 2
+    @property
+    def srodek_obiektu_y(self):
+        return self.y + self.wysokosc / 2
+    def oblicz_kw_odleglosci(self, x, y):
+        return (self.srodek_obiektu_x - x)**2 + (self.srodek_obiektu_y - y)**2
     def update(self):
         self.x += self.krok_x
         if self.x < 0:
@@ -46,9 +47,10 @@ class FizykaOdbijajacegoSieObiektu:
 class PoruszajacySieKwadracik(FizykaOdbijajacegoSieObiektu):
     def __init__(self, x, y):
         super(PoruszajacySieKwadracik, self).__init__(x, y)
+        self.stopien_szarosci = 0.5
     @property
     def kolor(self):
-        return (0, 255, 0)
+        return (int(255*self.stopien_szarosci), int(255*self.stopien_szarosci), int(255*self.stopien_szarosci))
     def paint(self):
         pygame.draw.rect(background, self.kolor, (self.x, self.y, self.szerokosc, self.wysokosc))
 class Kolo(PoruszajacySieKwadracik):
@@ -83,8 +85,13 @@ obiekty_na_ekranie[0].szerokosc = 90
 obiekty_na_ekranie[1].wysokosc = 90
 def paint_myszka():
     x, y = pygame.mouse.get_pos()
+    # pygame.draw.line(background, (0, 0, 0), (0, 0), (x, y))
+    # pygame.draw.line(background, (0, 0, 0), (SZEROKOSC_OKNA, 0), (x, y))
+    # pygame.draw.line(background, (0, 0, 0), (SZEROKOSC_OKNA, WYSOKOSC_OKNA), (x, y))
+    pygame.draw.line(background, (0, 0, 0), (0, y), (SZEROKOSC_OKNA, y))
+    pygame.draw.line(background, (0, 0, 0), (x, 0), (x, WYSOKOSC_OKNA))
     for o in obiekty_na_ekranie:
-        pygame.draw.line(background, (0,0,0), (x,y), (o.srodek_0biektu_x,o.srodek_0biektu_y))
+        pygame.draw.line(background, (0, 0, 0), (x, y), (o.srodek_obiektu_x, o.srodek_obiektu_y))
 def paint():
     pygame.draw.rect(background, (255, 255, 255), (0, 0, *window))
     pygame.draw.rect(background, (0, 255, 255), (20, 20, 30, 30))
@@ -108,4 +115,9 @@ while not done:
     paint()
     for k in obiekty_na_ekranie:
         k.update()
+    x, y = pygame.mouse.get_pos()
+    posortowane_obiekty = sorted(obiekty_na_ekranie, key=lambda obiekt: obiekt.oblicz_kw_odleglosci(x, y))
+    for idx, o in enumerate(posortowane_obiekty):
+        stopien_szarosci = (len(posortowane_obiekty) - idx) / (len(posortowane_obiekty) + 3)
+        o.stopien_szarosci = stopien_szarosci
 pygame.quit()
