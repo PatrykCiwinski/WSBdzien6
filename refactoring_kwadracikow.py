@@ -41,6 +41,9 @@ class FizykaOdbijajacegoSieObiektu:
             self.krok_y = -self.krok_y
             self.y = WYSOKOSC_OKNA - self.wysokosc
 class PoruszajacySieKwadracik(FizykaOdbijajacegoSieObiektu):
+    @staticmethod
+    def nowy_kwadrat():
+        return PoruszajacySieKwadracik(random.randint(0,SZEROKOSC_OKNA), random.randint(0, WYSOKOSC_OKNA))
     def __init__(self, x, y):
         super(PoruszajacySieKwadracik, self).__init__(x, y)
         self.stopien_szarosci = 0.5
@@ -55,7 +58,6 @@ class Kolo(PoruszajacySieKwadracik):
         self.promien = 25
         self.krok_zmiany_promienia = 0.1
     def paint(self):
-        pygame.draw.rect(background, (255, 0, 0), (self.x, self.y, self.szerokosc, self.wysokosc))
         pygame.draw.circle(background, self.kolor, (self.x + self.promien, self.y + self.promien), self.promien)
     @property
     def wysokosc(self):
@@ -78,8 +80,9 @@ class Kolo(PoruszajacySieKwadracik):
             self.krok_zmiany_promienia = -self.krok_zmiany_promienia
 def losowy_kolor():
     return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-obiekty_na_ekranie = [PoruszajacySieKwadracik(120, 220), PoruszajacySieKwadracik(220, 220),
-                      PoruszajacySieKwadracik(120, 120),
+
+obiekty_na_ekranie = [PoruszajacySieKwadracik.nowy_kwadrat(), PoruszajacySieKwadracik.nowy_kwadrat(),
+                      PoruszajacySieKwadracik.nowy_kwadrat(),
                       Kolo(80, 100)]
 punkt_od_ktorego_rysujemy_linie = (0, 0)
 obiekty_na_ekranie[0].szerokosc = 90
@@ -95,8 +98,8 @@ def paint_myszka():
         pygame.draw.line(background, (0, 0, 0), (x, y), (o.srodek_obiektu_x, o.srodek_obiektu_y))
 def paint():
     pygame.draw.rect(background, (255, 255, 255), (0, 0, *window))
-    pygame.draw.rect(background, (0, 255, 255), (20, 20, 30, 30))
-    pygame.draw.rect(background, (255, 0, 255), (120, 120, 50, 50))
+    # pygame.draw.rect(background, (0, 255, 255), (20, 20, 30, 30))
+    # pygame.draw.rect(background, (255, 0, 255), (120, 120, 50, 50))
     for k in obiekty_na_ekranie:
         k.paint()
     paint_myszka()
