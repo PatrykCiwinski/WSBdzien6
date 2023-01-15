@@ -15,12 +15,8 @@ class FizykaOdbijajacegoSieObiektu:
         self.y = y
         self.krok_x = 2
         self.krok_y = 3
-        if self._czy_ustawiac_wymiary:
-            self.szerokosc = 50
-            self.wysokosc = 50
-    @property
-    def _czy_ustawiac_wymiary(self):
-        return True
+        self.szerokosc = 50
+        self.wysokosc = 50
     @property
     def srodek_obiektu_x(self):
         return self.x + self.szerokosc / 2
@@ -62,14 +58,17 @@ class Kolo(PoruszajacySieKwadracik):
         pygame.draw.rect(background, (255, 0, 0), (self.x, self.y, self.szerokosc, self.wysokosc))
         pygame.draw.circle(background, self.kolor, (self.x + self.promien, self.y + self.promien), self.promien)
     @property
-    def _czy_ustawiac_wymiary(self):
-        return False
-    @property
     def wysokosc(self):
         return 2 * self.promien
     @property
     def szerokosc(self):
         return 2 * self.promien
+    @szerokosc.setter
+    def szerokosc(self, nowa_szerokosc):
+        self.promien=nowa_szerokosc/2
+    @wysokosc.setter
+    def wysokosc(self, nowa_wysokosc):
+        self.promien= nowa_wysokosc / 2
     def update(self):
         super(Kolo, self).update()
         self.promien += self.krok_zmiany_promienia
@@ -127,4 +126,11 @@ while not done:
     for idx, o in enumerate(posortowane_obiekty):
         stopien_szarosci = (len(posortowane_obiekty) - idx) / (len(posortowane_obiekty) + 1)
         o.stopien_szarosci = stopien_szarosci
+    guzik1, guzik2,guzik3=pygame.mouse.get_pressed()
+    if guzik1:
+        obiekt_najblizszy_myszcze.szerokosc+=4
+    elif guzik3:
+        obiekt_najblizszy_myszcze.szerokosc-=4
+    elif guzik2:
+        obiekt_najblizszy_myszcze.wysokosc+=2
 pygame.quit()
