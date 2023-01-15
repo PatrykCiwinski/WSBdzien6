@@ -162,6 +162,10 @@ class Mediator:
             guzik1, guzik2, guzik3 = pygame.mouse.get_pressed()
             if guzik1:
                 obiekt_najblizszy_myszcze.szerokosc += 4
+            if guzik2:
+                obiekt_najblizszy_myszcze.szerokosc -= 4
+            if guzik3:
+                obiekt_najblizszy_myszcze.wysokosc += 4
         pygame.quit()
     def _paint(self, background, screen):
         pygame.draw.rect(background, (255, 255, 255), (0, 0, *self.window))
@@ -179,6 +183,6 @@ class Mediator:
 mediator1 = Mediator()
 mediator2 = Mediator()
 koncowy_mediator = mediator1 + mediator2
-# koncowy_mediator += 150
-koncowy_mediator-=100
+koncowy_mediator += 200
+
 koncowy_mediator.uruchom_gre()
