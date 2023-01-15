@@ -1,4 +1,4 @@
-# poprawa aby zdrzak koła był taki sam jak rysowane koło
+# rysowanie lini od myszki
 import random
 import pygame
 pygame.init()
@@ -75,12 +75,18 @@ obiekty_na_ekranie = [PoruszajacySieKwadracik(120, 220), PoruszajacySieKwadracik
                       Kolo(80, 100)]
 obiekty_na_ekranie[0].szerokosc = 90
 obiekty_na_ekranie[1].wysokosc = 90
+def paint_myszka():
+    x, y = pygame.mouse.get_pos()
+    pygame.draw.line(background, (0, 0, 0), (0, 0), (x, y))
+    pygame.draw.line(background, (0, 0, 0), (SZEROKOSC_OKNA, 0), (x, y))
+    pygame.draw.line(background, (0, 0, 0), (SZEROKOSC_OKNA, WYSOKOSC_OKNA), (x, y))
 def paint():
     pygame.draw.rect(background, (255, 255, 255), (0, 0, *window))
     pygame.draw.rect(background, (0, 255, 255), (20, 20, 30, 30))
     pygame.draw.rect(background, (255, 0, 255), (120, 120, 50, 50))
     for k in obiekty_na_ekranie:
         k.paint()
+    paint_myszka()
     screen.blit(background, (0, 0))
     pygame.display.flip()
 done = False
