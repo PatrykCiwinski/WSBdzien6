@@ -44,6 +44,10 @@ class PoruszajacySieKwadracik(FizykaOdbijajacegoSieObiektu):
     @staticmethod
     def nowy_kwadrat():
         return PoruszajacySieKwadracik(random.randint(0,SZEROKOSC_OKNA), random.randint(0, WYSOKOSC_OKNA))
+    @classmethod
+    def nowy_obiekt(self):
+        return PoruszajacySieKwadracik(random.randint(0,SZEROKOSC_OKNA), random.randint(0, WYSOKOSC_OKNA))
+
     def __init__(self, x, y):
         super(PoruszajacySieKwadracik, self).__init__(x, y)
         self.stopien_szarosci = 0.5
@@ -59,6 +63,10 @@ class Kolo(PoruszajacySieKwadracik):
         self.krok_zmiany_promienia = 0.1
     def paint(self):
         pygame.draw.circle(background, self.kolor, (self.x + self.promien, self.y + self.promien), self.promien)
+
+    @classmethod
+    def nowy_obiekt(self):
+        return PoruszajacySieKwadracik(random.randint(0, SZEROKOSC_OKNA), random.randint(0, WYSOKOSC_OKNA))
     @property
     def wysokosc(self):
         return 2 * self.promien
@@ -81,9 +89,9 @@ class Kolo(PoruszajacySieKwadracik):
 def losowy_kolor():
     return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-obiekty_na_ekranie = [PoruszajacySieKwadracik.nowy_kwadrat(), PoruszajacySieKwadracik.nowy_kwadrat(),
-                      PoruszajacySieKwadracik.nowy_kwadrat(),
-                      Kolo(80, 100)]
+obiekty_na_ekranie = [PoruszajacySieKwadracik.nowy_obiekt(), PoruszajacySieKwadracik.nowy_obiekt(),
+                      PoruszajacySieKwadracik.nowy_obiekt(),
+                      Kolo.nowy_obiekt()]
 punkt_od_ktorego_rysujemy_linie = (0, 0)
 obiekty_na_ekranie[0].szerokosc = 90
 obiekty_na_ekranie[1].wysokosc = 90
