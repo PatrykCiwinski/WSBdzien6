@@ -18,6 +18,13 @@ class FizykaOdbijajacegoSieObiektu:
         if self._czy_ustawiac_wymiary:
             self.szerokosc = 50
             self.wysokosc = 50
+
+    @property
+    def srodek_0biektu_x(self):
+        return self.szerokosc/2 +self.x
+    @property
+    def srodek_0biektu_y(self):
+        return self.wysokosc/2 +self.y
     @property
     def _czy_ustawiac_wymiary(self):
         return True
@@ -50,7 +57,6 @@ class Kolo(PoruszajacySieKwadracik):
         self.promien = 25
         self.krok_zmiany_promienia = 0.1
     def paint(self):
-        pygame.draw.rect(background, (255, 0, 0), (self.x, self.y, self.szerokosc, self.wysokosc))
         pygame.draw.circle(background, self.kolor, (self.x + self.promien, self.y + self.promien), self.promien)
     @property
     def _czy_ustawiac_wymiary(self):
@@ -77,9 +83,8 @@ obiekty_na_ekranie[0].szerokosc = 90
 obiekty_na_ekranie[1].wysokosc = 90
 def paint_myszka():
     x, y = pygame.mouse.get_pos()
-    pygame.draw.line(background, (0, 0, 0), (0, 0), (x, y))
-    pygame.draw.line(background, (0, 0, 0), (SZEROKOSC_OKNA, 0), (x, y))
-    pygame.draw.line(background, (0, 0, 0), (SZEROKOSC_OKNA, WYSOKOSC_OKNA), (x, y))
+    for o in obiekty_na_ekranie:
+        pygame.draw.line(background, (0,0,0), (x,y), (o.srodek_0biektu_x,o.srodek_0biektu_y))
 def paint():
     pygame.draw.rect(background, (255, 255, 255), (0, 0, *window))
     pygame.draw.rect(background, (0, 255, 255), (20, 20, 30, 30))
