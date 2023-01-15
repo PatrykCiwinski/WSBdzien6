@@ -1,4 +1,4 @@
-# rysowanie lini od myszki do środka każdego obiektu
+# rysowanie lini od obiektu najbliższego myszce: do środka każdego obiektu i sortowanie obiektów przy tym
 import random
 import pygame
 pygame.init()
@@ -59,6 +59,7 @@ class Kolo(PoruszajacySieKwadracik):
         self.promien = 25
         self.krok_zmiany_promienia = 0.1
     def paint(self):
+        pygame.draw.rect(background, (255, 0, 0), (self.x, self.y, self.szerokosc, self.wysokosc))
         pygame.draw.circle(background, self.kolor, (self.x + self.promien, self.y + self.promien), self.promien)
     @property
     def _czy_ustawiac_wymiary(self):
@@ -81,15 +82,16 @@ def losowy_kolor():
 obiekty_na_ekranie = [PoruszajacySieKwadracik(120, 220), PoruszajacySieKwadracik(220, 220),
                       PoruszajacySieKwadracik(120, 120),
                       Kolo(80, 100)]
+punkt_od_ktorego_rysujemy_linie = (0, 0)
 obiekty_na_ekranie[0].szerokosc = 90
 obiekty_na_ekranie[1].wysokosc = 90
 def paint_myszka():
-    x, y = pygame.mouse.get_pos()
+    x, y = punkt_od_ktorego_rysujemy_linie
     # pygame.draw.line(background, (0, 0, 0), (0, 0), (x, y))
     # pygame.draw.line(background, (0, 0, 0), (SZEROKOSC_OKNA, 0), (x, y))
     # pygame.draw.line(background, (0, 0, 0), (SZEROKOSC_OKNA, WYSOKOSC_OKNA), (x, y))
-    pygame.draw.line(background, (0, 0, 0), (0, y), (SZEROKOSC_OKNA, y))
-    pygame.draw.line(background, (0, 0, 0), (x, 0), (x, WYSOKOSC_OKNA))
+    # pygame.draw.line(background, (0, 0, 0), (0, y), (SZEROKOSC_OKNA, y))
+    # pygame.draw.line(background, (0, 0, 0), (x, 0), (x, WYSOKOSC_OKNA))
     for o in obiekty_na_ekranie:
         pygame.draw.line(background, (0, 0, 0), (x, y), (o.srodek_obiektu_x, o.srodek_obiektu_y))
 def paint():
@@ -117,7 +119,12 @@ while not done:
         k.update()
     x, y = pygame.mouse.get_pos()
     posortowane_obiekty = sorted(obiekty_na_ekranie, key=lambda obiekt: obiekt.oblicz_kw_odleglosci(x, y))
+    obiekt_najblizszy_myszcze = posortowane_obiekty[0]
+    srodek_obiektu_najbliszego_myszce = obiekt_najblizszy_myszcze.srodek_obiektu_x, obiekt_najblizszy_myszcze.srodek_obiektu_y
+    punkt_od_ktorego_rysujemy_linie = srodek_obiektu_najbliszego_myszce
+    # *args, **kwargs - rozpakowanie w Python
+    posortowane_obiekty = sorted(obiekty_na_ekranie, key=lambda obiekt: obiekt.oblicz_kw_odleglosci(*srodek_obiektu_najbliszego_myszce))
     for idx, o in enumerate(posortowane_obiekty):
-        stopien_szarosci = (len(posortowane_obiekty) - idx) / (len(posortowane_obiekty) + 3)
+        stopien_szarosci = (len(posortowane_obiekty) - idx) / (len(posortowane_obiekty) + 1)
         o.stopien_szarosci = stopien_szarosci
 pygame.quit()
