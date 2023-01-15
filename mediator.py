@@ -112,6 +112,8 @@ class Mediator:
             return wynik
     def __sub__(self, other):
             return self + (-other)
+    def __int__(self):
+            return len(koncowy_mediator.obiekty_na_ekranie)
     @property
     def window(self):
         return (self.SZEROKOSC_OKNA, self.WYSOKOSC_OKNA)
@@ -171,5 +173,6 @@ mediator1 = Mediator()
 mediator2 = Mediator()
 koncowy_mediator = mediator1 + mediator2
 koncowy_mediator -= 200
+print(int(koncowy_mediator))
 
 koncowy_mediator.uruchom_gre()
