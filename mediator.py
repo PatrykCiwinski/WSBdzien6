@@ -111,20 +111,7 @@ class Mediator:
             wynik.WYSOKOSC_OKNA = self.WYSOKOSC_OKNA + other
             return wynik
     def __sub__(self, other):
-        if isinstance(other, Mediator):
-            wynik = Mediator()
-            wynik.obiekty_na_ekranie = self.obiekty_na_ekranie + other.obiekty_na_ekranie
-            for o in wynik.obiekty_na_ekranie:
-                o.mediator = wynik
-            return wynik
-        if isinstance(other, int):
-            wynik = Mediator()
-            wynik.obiekty_na_ekranie = self.obiekty_na_ekranie
-            for o in wynik.obiekty_na_ekranie:
-                o.mediator = wynik
-            wynik.SZEROKOSC_OKNA = self.SZEROKOSC_OKNA - other
-            wynik.WYSOKOSC_OKNA = self.WYSOKOSC_OKNA - other
-            return wynik
+            return self + (-other)
     @property
     def window(self):
         return (self.SZEROKOSC_OKNA, self.WYSOKOSC_OKNA)
@@ -183,6 +170,6 @@ class Mediator:
 mediator1 = Mediator()
 mediator2 = Mediator()
 koncowy_mediator = mediator1 + mediator2
-koncowy_mediator += 200
+koncowy_mediator -= 200
 
 koncowy_mediator.uruchom_gre()
