@@ -15,8 +15,11 @@ class FizykaOdbijajacegoSieObiektu:
     @property
     def srodek_obiektu_y(self):
         return self.y + self.wysokosc / 2
+
     def oblicz_kw_odleglosci(self, x, y):
         return (self.srodek_obiektu_x - x)**2 + (self.srodek_obiektu_y - y)**2
+
+
     def update(self):
         self.x += self.krok_x
         if self.x < 0:
@@ -32,40 +35,55 @@ class FizykaOdbijajacegoSieObiektu:
         elif self.y + self.wysokosc > mediator.WYSOKOSC_OKNA:
             self.krok_y = -self.krok_y
             self.y = mediator.WYSOKOSC_OKNA - self.wysokosc
+
+
 class PoruszajacySieKwadracik(FizykaOdbijajacegoSieObiektu):
     @classmethod
     def nowy_obiekt(cls):
         return PoruszajacySieKwadracik(random.randint(0, mediator.SZEROKOSC_OKNA), random.randint(0, mediator.WYSOKOSC_OKNA))
+
     def __init__(self, x, y):
         super(PoruszajacySieKwadracik, self).__init__(x, y)
         self.stopien_szarosci = 0.5
+
     @property
     def kolor(self):
         return (int(255*self.stopien_szarosci), int(255*self.stopien_szarosci), int(255*self.stopien_szarosci))
+
     def paint(self, background):
         pygame.draw.rect(background, self.kolor, (self.x, self.y, self.szerokosc, self.wysokosc))
+
+
 class Kolo(PoruszajacySieKwadracik):
+
     @classmethod
     def nowy_obiekt(cls):
         return Kolo(random.randint(0, mediator.SZEROKOSC_OKNA), random.randint(0, mediator.WYSOKOSC_OKNA))
+
     def __init__(self, x, y):
         super(Kolo, self).__init__(x, y)
         self.promien = 25
         self.krok_zmiany_promienia = 0.1
+
     def paint(self, background):
         pygame.draw.circle(background, self.kolor, (self.x + self.promien, self.y + self.promien), self.promien)
+
     @property
     def wysokosc(self):
         return 2 * self.promien
+
     @wysokosc.setter
     def wysokosc(self, nowa_wysokosc):
         self.promien = nowa_wysokosc / 2
+
     @property
     def szerokosc(self):
         return 2 * self.promien
+
     @szerokosc.setter
     def szerokosc(self, nowa_szerokosc):
         self.promien = nowa_szerokosc / 2
+
     def update(self):
         super(Kolo, self).update()
         self.promien += self.krok_zmiany_promienia
@@ -73,6 +91,7 @@ class Kolo(PoruszajacySieKwadracik):
             self.krok_zmiany_promienia = -self.krok_zmiany_promienia
         elif self.promien < 10:
             self.krok_zmiany_promienia = -self.krok_zmiany_promienia
+
 class Mediator:
     def __init__(self):
         self.obiekty_na_ekranie = []
@@ -83,7 +102,9 @@ class Mediator:
         self.window = (self.SZEROKOSC_OKNA, self.WYSOKOSC_OKNA)
         self.screen = pygame.display.set_mode(self.window)
         self.background = pygame.Surface(self.window)
+
     def uruchom_gre(self):
+
         self.obiekty_na_ekranie = [PoruszajacySieKwadracik.nowy_obiekt(),
                                    PoruszajacySieKwadracik.nowy_obiekt(),
                                    Kolo.nowy_obiekt(),Kolo.nowy_obiekt()
@@ -121,6 +142,7 @@ class Mediator:
             if guzik1:
                 obiekt_najblizszy_myszcze.szerokosc += 4
         pygame.quit()
+
     def _paint(self, background):
         pygame.draw.rect(self.background, (255, 255, 255), (0, 0, *self.window))
         for k in self.obiekty_na_ekranie:
@@ -128,8 +150,10 @@ class Mediator:
         self._paint_myszka(background)
         self.screen.blit(self.background, (0, 0))
         pygame.display.flip()
+
     def _update(self):
         pass
+
     def _paint_myszka(self, background):
         x, y = self.punkt_od_ktorego_rysujemy_linie
         for o in self.obiekty_na_ekranie:
